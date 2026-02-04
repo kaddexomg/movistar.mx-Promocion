@@ -3,247 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movistar México | Cotizador de Planes y Equipos 2026</title>
+    <title>Movistar México | Tienda Oficial de Equipos y Planes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Onest', sans-serif; background-color: #FFFFFF; color: #333; scroll-behavior: smooth; }
         .movistar-blue { background-color: #019DF0; }
         .text-movistar-blue { color: #019DF0; }
         .bg-movistar-green { background-color: #5BC500; }
+        .border-movistar { border-color: #019DF0; }
         
+        /* Animaciones */
         .stage-container { display: none; }
-        .stage-container.active { display: block; animation: slideUp 0.4s ease-out; }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .stage-container.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Estilo para los radio buttons de planes */
-        .plan-card-input:checked + .plan-card-label {
-            border-color: #019DF0;
-            background-color: #f0f9ff;
-            box-shadow: 0 10px 15px -3px rgba(1, 157, 240, 0.1);
-        }
+        /* Estética de Cards */
+        .device-card { border: 1px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .device-card:hover { border-color: #019DF0; box-shadow: 0 10px 25px -5px rgba(1, 157, 240, 0.1); transform: translateY(-5px); }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #019DF0; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="loader" class="fixed inset-0 bg-white z-[9999] flex flex-col justify-center items-center">
-        <div class="w-12 h-12 border-4 border-slate-200 border-t-movistar-blue rounded-full animate-spin mb-4"></div>
-        <p class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Configurando tu oferta personalizada</p>
-    </div>
-
-    <header class="bg-white border-b sticky top-0 z-50">
-        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Movistar_logo.svg/1200px-Movistar_logo.svg.png" class="h-6" alt="Movistar">
+    <header class="bg-white border-b sticky top-0 z-[100]">
+        <div class="container mx-auto px-4 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Movistar_logo.svg/1200px-Movistar_logo.svg.png" class="h-10 cursor-pointer" onclick="location.reload()" alt="Movistar">
+                <nav class="hidden lg:flex gap-6 text-[13px] font-bold uppercase tracking-wider text-slate-600">
+                    <a href="#prepago" class="hover:text-movistar-blue">Prepago</a>
+                    <a href="#catalogo" class="hover:text-movistar-blue">Equipos</a>
+                    <a href="#cobertura" class="hover:text-movistar-blue">Cobertura</a>
+                    <a href="#sucursales" class="hover:text-movistar-blue">Sucursales</a>
+                </nav>
+            </div>
             <div class="flex items-center gap-4">
-                <span class="text-xs font-bold text-slate-400">PLANES 2026</span>
-                <div class="h-8 w-[1px] bg-slate-200"></div>
-                <i class="fas fa-shopping-cart text-slate-400"></i>
+                <button class="bg-slate-100 p-2 rounded-full"><i class="fas fa-search text-slate-500"></i></button>
+                <div class="h-6 w-[1px] bg-slate-200"></div>
+                <span class="text-[10px] font-black bg-movistar-green text-white px-3 py-1 rounded-full uppercase">Venta Online</span>
             </div>
         </div>
     </header>
 
-    <section id="stage-1" class="stage-container active py-8 px-4">
-        <div class="container mx-auto max-w-6xl">
-            <div class="text-center mb-10">
-                <h1 class="text-3xl font-extrabold text-slate-800">Paso 1: Selecciona tu Equipo</h1>
-                <p class="text-slate-500 mt-2">Financiamiento disponible para clientes Movistar</p>
-            </div>
-            <div id="device-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <section id="hero" class="bg-gradient-to-r from-blue-600 to-sky-400 py-12 text-white">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+            <div>
+                <span class="bg-white/20 backdrop-blur px-4 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Promoción Exclusiva Digital</span>
+                <h1 class="text-5xl font-extrabold leading-tight">Tu nuevo equipo con <span class="text-movistar-green italic">40% de Descuento</span></h1>
+                <p class="mt-4 text-xl opacity-90">Llévatelo a plazos desde 12 hasta 48 meses + Smartwatch de regalo.</p>
+                <div class="mt-8 flex gap-4">
+                    <a href="#catalogo" class="bg-white text-movistar-blue px-8 py-4 rounded-full font-black text-sm uppercase shadow-xl hover:bg-slate-50 transition">Ver Catálogo</a>
                 </div>
+            </div>
+            <div class="hidden md:flex justify-end">
+                <img src="https://www.movistar.com.mx/documents/44823157/163351918/Equipo-Hero-I15.png" class="h-80 drop-shadow-2xl">
+            </div>
         </div>
     </section>
 
-    <section id="stage-2" class="stage-container py-8 px-4">
-        <div class="container mx-auto max-w-5xl">
-            <button onclick="navigateTo(1)" class="mb-6 text-slate-400 font-bold text-xs flex items-center gap-2 uppercase tracking-widest">
-                <i class="fas fa-arrow-left"></i> Cambiar Equipo
+    <section id="stage-1" class="stage-container active py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6" id="catalogo">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Equipos Disponibles</h2>
+                    <p class="text-slate-500 font-medium">Precios con descuento y Smartwatch incluido.</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="search" onkeyup="filterDevices()" placeholder="Buscar marca o modelo..." class="px-6 py-3 border rounded-full outline-none focus:border-movistar-blue w-64 text-sm shadow-sm">
+                </div>
+            </div>
+
+            <div id="device-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                </div>
+
+            <div id="prepago" class="mt-32 pt-16 border-t">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-black text-slate-800 tracking-tighter uppercase">Ofertas Prepago Movistar</h2>
+                    <p class="text-slate-500 font-medium">La red más rápida con los beneficios más grandes de México.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div class="bg-blue-50 p-10 rounded-[3rem] border-2 border-blue-100 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform"><i class="fas fa-bolt text-9xl text-movistar-blue"></i></div>
+                        <h3 class="text-5xl font-black text-movistar-blue">$50</h3>
+                        <p class="font-bold text-slate-600 mb-6 uppercase tracking-widest">Vigencia 30 Días</p>
+                        <ul class="space-y-3 text-slate-700 font-bold mb-8">
+                            <li><i class="fas fa-check text-movistar-green mr-2"></i> 17 GB de navegación libre</li>
+                            <li><i class="fas fa-check text-movistar-green mr-2"></i> 22 Redes Sociales ILIMITADAS</li>
+                            <li><i class="fas fa-check text-movistar-green mr-2"></i> Llamadas y SMS sin límite</li>
+                        </ul>
+                        <button class="w-full bg-movistar-blue text-white py-4 rounded-2xl font-black uppercase shadow-lg">Activar en Tienda</button>
+                    </div>
+
+                    <div class="bg-slate-900 p-10 rounded-[3rem] text-white relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-6 opacity-20 group-hover:scale-110 transition-transform"><i class="fas fa-crown text-9xl text-movistar-green"></i></div>
+                        <h3 class="text-5xl font-black text-movistar-green">$100</h3>
+                        <p class="font-bold text-slate-400 mb-6 uppercase tracking-widest">Vigencia 45 Días</p>
+                        <ul class="space-y-3 font-bold mb-8">
+                            <li><i class="fas fa-infinity text-movistar-green mr-2"></i> TODO ILIMITADO (Apps & Streaming)</li>
+                            <li><i class="fas fa-wifi text-movistar-green mr-2"></i> MODO HOTSPOT (Comparte Internet)</li>
+                            <li><i class="fas fa-video text-movistar-green mr-2"></i> Youtube & Netflix Incluidos</li>
+                        </ul>
+                        <button class="w-full bg-movistar-green text-white py-4 rounded-2xl font-black uppercase shadow-lg">Activar en Tienda</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cobertura" class="mt-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-slate-50 p-12 rounded-[4rem]">
+                <div>
+                    <h3 class="text-4xl font-black text-slate-800 tracking-tighter uppercase mb-6">Nuestra Red llega a todo México</h3>
+                    <p class="text-slate-600 leading-relaxed mb-8">Con Movistar siempre estás conectado. Nuestra infraestructura 5G cubre las principales ciudades y nuestra red 4G LTE asegura señal en cualquier carretera o pueblo del país.</p>
+                    <div class="flex gap-8">
+                        <div><span class="block text-3xl font-black text-movistar-blue">99%</span><span class="text-xs font-bold text-slate-400 uppercase">Cobertura</span></div>
+                        <div><span class="block text-3xl font-black text-movistar-blue">24/7</span><span class="text-xs font-bold text-slate-400 uppercase">Soporte</span></div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-3xl shadow-xl border overflow-hidden">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mexico_map_states.svg/1024px-Mexico_map_states.svg.png" class="w-full h-64 object-contain opacity-40">
+                    <div class="text-center p-4 border-t">
+                        <p id="sucursales" class="font-black text-xs text-slate-400 uppercase tracking-widest"><i class="fas fa-map-marker-alt text-movistar-blue mr-2"></i> +1,500 Sucursales en México</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-32">
+                <h3 class="text-center text-3xl font-black text-slate-800 uppercase mb-12">Calificaciones de Clientes</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white border p-8 rounded-3xl shadow-sm">
+                        <div class="flex gap-1 text-yellow-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-slate-600 italic">"Excelente servicio. Saqué mi iPhone 17 a 36 meses y el pago mensual es bajísimo. ¡El smartwatch de regalo está genial!"</p>
+                        <p class="mt-6 font-black text-xs text-movistar-blue">— Carlos Ortega, CDMX</p>
+                    </div>
+                    <div class="bg-white border p-8 rounded-3xl shadow-sm">
+                        <div class="flex gap-1 text-yellow-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-slate-600 italic">"Me sorprendió el prepago de $100 por 45 días, realmente comparto internet a mi laptop sin problemas."</p>
+                        <p class="mt-6 font-black text-xs text-movistar-blue">— Sofía Reyes, Guadalajara</p>
+                    </div>
+                    <div class="bg-white border p-8 rounded-3xl shadow-sm">
+                        <div class="flex gap-1 text-yellow-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-slate-600 italic">"La mejor red en mi zona. El proceso de crédito fue muy rápido y la entrega en mi domicilio fue segura."</p>
+                        <p class="mt-6 font-black text-xs text-movistar-blue">— Miguel Ángel, Puebla</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stage-2" class="stage-container py-16 bg-slate-50">
+        <div class="container mx-auto max-w-6xl px-4">
+            <button onclick="navigateTo(1)" class="mb-8 font-black text-xs text-slate-400 hover:text-movistar-blue uppercase tracking-widest">
+                <i class="fas fa-arrow-left mr-2"></i> Cambiar de equipo
             </button>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 border">
+                <div class="p-12 border-r flex flex-col items-center justify-center text-center">
+                    <img id="sel-img" src="" class="h-80 object-contain mb-8 drop-shadow-2xl">
+                    <div class="bg-movistar-green text-white px-6 py-2 rounded-full font-black text-xs uppercase mb-4 shadow-lg shadow-green-100">
+                        <i class="fas fa-gift mr-2"></i> + Smartwatch de Regalo
+                    </div>
+                    <h3 id="sel-name" class="text-4xl font-black text-slate-800 tracking-tighter"></h3>
+                    <div class="mt-4 flex flex-wrap justify-center gap-2" id="sel-specs">
+                        </div>
+                </div>
                 
-                <div class="lg:col-span-2 space-y-8">
-                    
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                        <h3 class="font-black text-slate-800 mb-4 uppercase text-xs">Paso 2: Elige Plazo de Pago</h3>
-                        <div class="grid grid-cols-4 gap-2" id="plazo-container">
+                <div class="p-12 flex flex-col justify-center">
+                    <div class="mb-10">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Paso 1: Elige tu plan de pago</p>
+                        <div class="grid grid-cols-4 gap-3" id="plazo-list">
                             </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <h3 class="font-black text-slate-800 uppercase text-xs">Paso 3: Elige tu Plan de Renta</h3>
-                        <div class="grid grid-cols-1 gap-3" id="plan-container">
+                    <div class="mb-10">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Paso 2: Selecciona un plan de renta</p>
+                        <div class="space-y-3" id="plan-list">
                             </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-white p-8 rounded-[2rem] shadow-xl">
+                        <div class="flex justify-between items-center mb-2 opacity-60 text-xs font-bold uppercase">
+                            <span>Total Mensual</span>
+                            <span id="sel-off-text" class="text-movistar-green font-black">40% OFF Aplicado</span>
+                        </div>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-5xl font-black">$</span>
+                            <span id="sel-total" class="text-5xl font-black">0</span>
+                        </div>
+                        <button onclick="navigateTo(3)" class="w-full bg-movistar-blue text-white py-5 rounded-2xl font-black uppercase text-sm mt-8 shadow-lg hover:scale-[1.02] transition">Solicitar Crédito Ahora</button>
                     </div>
                 </div>
-
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden sticky top-24">
-                        <div class="p-6 border-b bg-slate-50 text-center">
-                            <img id="sum-img" src="" class="h-32 mx-auto object-contain mb-4">
-                            <h4 id="sum-name" class="font-extrabold text-slate-800"></h4>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Equipo (mensual):</span>
-                                <span id="sum-eq" class="font-bold text-slate-700">$0</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Plan de Renta:</span>
-                                <span id="sum-plan" class="font-bold text-slate-700">$0</span>
-                            </div>
-                            <div class="pt-4 border-t">
-                                <span class="text-[10px] font-black text-movistar-blue uppercase">Total Mensual</span>
-                                <div class="flex items-baseline gap-1">
-                                    <span class="text-4xl font-black text-slate-900">$</span>
-                                    <span id="sum-total" class="text-4xl font-black text-slate-900">0</span>
-                                </div>
-                            </div>
-                            <button onclick="navigateTo(3)" class="w-full movistar-blue text-white font-black py-4 rounded-2xl shadow-lg mt-4 hover:opacity-90 transition-all">
-                                CONTINUAR PEDIDO
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <section id="stage-3" class="stage-container py-12 px-4">
-        <div class="max-w-xl mx-auto bg-white rounded-[3rem] shadow-2xl p-10">
-            <h2 class="text-2xl font-black text-slate-800 mb-6 text-center">Finalizar Solicitud</h2>
-            <form onsubmit="finishOrder(event)" class="space-y-4">
-                <input type="text" placeholder="Nombre completo" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-movistar-blue font-semibold">
-                <input type="tel" placeholder="Número de contacto" maxlength="10" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-movistar-blue font-semibold">
-                <textarea placeholder="Dirección completa de entrega" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-movistar-blue font-semibold h-32"></textarea>
-                <div class="p-4 bg-blue-50 rounded-2xl text-[11px] text-slate-500 leading-relaxed">
-                    <i class="fas fa-info-circle mr-2 text-movistar-blue"></i>
-                    Al dar clic en confirmar, un asesor validará tu historial crediticio para autorizar el cargo a factura.
+    <section id="stage-3" class="stage-container py-20 px-4">
+        <div class="max-w-xl mx-auto bg-white p-12 rounded-[4rem] shadow-2xl border text-center">
+            <h2 class="text-3xl font-black text-slate-800 uppercase mb-8">Información de Envío</h2>
+            <form onsubmit="confirmOrder(event)" class="space-y-4 text-left">
+                <input type="text" placeholder="Nombre completo del titular" required class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-3xl outline-none focus:border-movistar-blue font-bold">
+                <input type="tel" placeholder="Número Movistar (10 dígitos)" required maxlength="10" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-3xl outline-none focus:border-movistar-blue font-bold">
+                <textarea placeholder="Dirección detallada de entrega (Calle, No, CP, Colonia)" required class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-3xl outline-none focus:border-movistar-blue font-bold h-32"></textarea>
+                <div class="p-4 bg-blue-50 text-blue-800 rounded-2xl text-[10px] font-bold uppercase leading-relaxed">
+                    <i class="fas fa-shield-alt mr-2"></i> Tus datos están protegidos por la Ley Federal de Protección de Datos Personales.
                 </div>
-                <button type="submit" id="btn-final" class="w-full movistar-blue text-white font-black py-5 rounded-2xl shadow-xl">
-                    CONFIRMAR Y SOLICITAR
-                </button>
+                <button class="w-full movistar-blue text-white py-6 rounded-3xl font-black uppercase text-sm shadow-xl mt-6">Confirmar Pedido y Regalo</button>
             </form>
         </div>
     </section>
 
-    <section id="stage-4" class="stage-container py-16 px-4 text-center">
-        <div class="max-w-md mx-auto bg-white p-12 rounded-[4rem] shadow-xl border">
-            <div class="w-24 h-24 bg-movistar-green text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
+    <section id="stage-4" class="stage-container py-20 px-4 text-center">
+        <div class="max-w-md mx-auto bg-white p-16 rounded-[5rem] shadow-2xl border relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-movistar-green"></div>
+            <div class="w-24 h-24 bg-movistar-green text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-green-100">
                 <i class="fas fa-check text-4xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-slate-800 mb-2">¡Solicitud Enviada!</h2>
-            <p class="text-slate-500 mb-8">Tu folio de seguimiento es <span id="folio" class="font-bold text-movistar-blue"></span></p>
-            <button onclick="location.reload()" class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold text-sm">SALIR</button>
+            <h2 class="text-3xl font-black text-slate-800 uppercase mb-4 tracking-tighter italic">¡Solicitud Exitosa!</h2>
+            <p class="text-slate-500 font-medium mb-10">Un ejecutivo te llamará para validar tu dirección y confirmar el modelo de tu **Smartwatch de Regalo**.</p>
+            <div class="bg-slate-50 py-4 px-8 rounded-2xl border-2 border-dashed border-slate-200">
+                <span class="block text-[10px] font-black text-slate-400 uppercase">Número de Folio</span>
+                <span id="folio" class="text-2xl font-black text-slate-700 tracking-widest"></span>
+            </div>
+            <button onclick="location.reload()" class="mt-12 text-movistar-blue font-black uppercase text-xs tracking-widest underline">Volver al inicio</button>
         </div>
     </section>
 
     <script>
-        const devices = [
-            { id: 1, name: "iPhone 15 Pro", price: 23999, brand: "Apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017%20Pro%20Max.jfif" },
-            { id: 2, name: "Galaxy S24 Ultra", price: 25499, brand: "Samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024%20ultra.jfif" },
-            { id: 3, name: "Galaxy Tab S10 Ultra", price: 19500, brand: "Samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/tab%20s10.jfif" },
-            { id: 4, name: "Xiaomi 13T Pro", price: 11999, brand: "Xiaomi", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2013T%20Pro.jfif" },
-            { id: 5, name: "Motorola Edge 40 Pro", price: 10500, brand: "Motorola", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Edge%2040%20Pro.jfif" },
-            { id: 6, name: "Z Fold 5", price: 28900, brand: "Samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20Z%20Fold%205.jfif" }
+        const allDevices = [
+            { id: 51, name: "iPhone 17 Pro Max", brand: "apple", price: 32999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017%20Pro%20Max.jfif", specs: {cam:"64MP", screen:"6.9", cpu:"A19 Pro", storage:"512GB"} },
+            { id: 52, name: "iPhone 17", brand: "apple", price: 21999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017.jfif", specs: {cam:"48MP", screen:"6.3", cpu:"A18", storage:"256GB"} },
+            { id: 53, name: "iPhone 17 SE", brand: "apple", price: 12999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017%20SE.jfif", specs: {cam:"12MP", screen:"6.1", cpu:"A18", storage:"128GB"} },
+            { id: 1, name: "iPhone 15 Pro Max", brand: "apple", price: 28999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Pro%20Max.jfif", specs: {cam:"48MP", screen:"6.7", cpu:"A17", storage:"256GB"} },
+            { id: 2, name: "iPhone 15 Pro", brand: "apple", price: 23999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Pro.jfif", specs: {cam:"48MP", screen:"6.1", cpu:"A17", storage:"128GB"} },
+            { id: 3, name: "iPhone 15 Plus", brand: "apple", price: 21999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Plus.jfif", specs: {cam:"48MP", screen:"6.7", cpu:"A16", storage:"128GB"} },
+            { id: 4, name: "iPhone 15", brand: "apple", price: 19499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015.jfif", specs: {cam:"48MP", screen:"6.1", cpu:"A16", storage:"128GB"} },
+            { id: 5, name: "iPhone 14 Pro Max", brand: "apple", price: 25999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2014%20Pro%20Max.jfif", specs: {cam:"48MP", screen:"6.7", cpu:"A16", storage:"128GB"} },
+            { id: 6, name: "iPhone 14", brand: "apple", price: 16999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2013.jfif", specs: {cam:"12MP", screen:"6.1", cpu:"A15", storage:"128GB"} },
+            { id: 7, name: "iPhone 13", brand: "apple", price: 13999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2013.jfif", specs: {cam:"12MP", screen:"6.1", cpu:"A15", storage:"128GB"} },
+            { id: 8, name: "iPhone 12", brand: "apple", price: 11999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2012.jfif", specs: {cam:"12MP", screen:"6.1", cpu:"A14", storage:"64GB"} },
+            { id: 9, name: "iPhone 11", brand: "apple", price: 8999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2011.jfif", specs: {cam:"12MP", screen:"6.1", cpu:"A13", storage:"64GB"} },
+            { id: 10, name: "iPhone SE 3", brand: "apple", price: 10499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%20SE%203.jfif", specs: {cam:"12MP", screen:"4.7", cpu:"A15", storage:"64GB"} },
+            { id: 11, name: "Galaxy S24 Ultra", brand: "samsung", price: 30999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024%20ultra.jfif", specs: {cam:"200MP", screen:"6.8", cpu:"SD8G3", storage:"512GB"} },
+            { id: 12, name: "Galaxy S24+", brand: "samsung", price: 23999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024%20%2B.jfif", specs: {cam:"50MP", screen:"6.7", cpu:"SD8G3", storage:"256GB"} },
+            { id: 13, name: "Galaxy S24", brand: "samsung", price: 19499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024.jfif", specs: {cam:"50MP", screen:"6.2", cpu:"SD8G3", storage:"256GB"} },
+            { id: 14, name: "Galaxy Z Fold 5", brand: "samsung", price: 39999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20Z%20Fold%205.jfif", specs: {cam:"50MP", screen:"7.6", cpu:"SD8G2", storage:"512GB"} },
+            { id: 15, name: "Galaxy Z Flip 5", brand: "samsung", price: 24999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20Z%20Flip%205.jfif", specs: {cam:"12MP", screen:"6.7", cpu:"SD8G2", storage:"256GB"} },
+            { id: 16, name: "Galaxy A54", brand: "samsung", price: 8999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20A54.jfif", specs: {cam:"50MP", screen:"6.4", cpu:"Exynos", storage:"128GB"} },
+            { id: 17, name: "Galaxy A34", brand: "samsung", price: 6999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20A34.jfif", specs: {cam:"48MP", screen:"6.6", cpu:"Dimensity", storage:"128GB"} },
+            { id: 18, name: "Galaxy A15", brand: "samsung", price: 3500, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20A15.jfif", specs: {cam:"50MP", screen:"6.5", cpu:"Helio", storage:"128GB"} },
+            { id: 19, name: "Galaxy S23 FE", brand: "samsung", price: 11999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20S23%20FE.jfif", specs: {cam:"50MP", screen:"6.4", cpu:"Exynos", storage:"128GB"} },
+            { id: 20, name: "Galaxy A05", brand: "samsung", price: 2499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20A05.jfif", specs: {cam:"50MP", screen:"6.7", cpu:"Helio", storage:"64GB"} },
+            { id: 21, name: "Edge 40 Pro", brand: "motorola", price: 22999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Edge%2040%20Pro.jfif", specs: {cam:"50MP", screen:"6.67", cpu:"SD8G2", storage:"256GB"} },
+            { id: 22, name: "Edge 40 Neo", brand: "motorola", price: 7699, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Edge%2040%20Neo.jfif", specs: {cam:"50MP", screen:"6.55", cpu:"Dimensity", storage:"256GB"} },
+            { id: 23, name: "Razr 40 Ultra", brand: "motorola", price: 26999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Razr%2040%20Ultra.jfif", specs: {cam:"12MP", screen:"6.9", cpu:"SD8+", storage:"512GB"} },
+            { id: 24, name: "Moto G84", brand: "motorola", price: 5999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20G84.jfif", specs: {cam:"50MP", screen:"6.5", cpu:"SD695", storage:"256GB"} },
+            { id: 25, name: "Moto G54", brand: "motorola", price: 4999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20G84.jfif", specs: {cam:"50MP", screen:"6.5", cpu:"Dimensity", storage:"256GB"} },
+            { id: 26, name: "Moto G14", brand: "motorola", price: 3299, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20G14.jfif", specs: {cam:"50MP", screen:"6.5", cpu:"Unisoc", storage:"128GB"} },
+            { id: 27, name: "Moto E13", brand: "motorola", price: 2499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20E13.jfif", specs: {cam:"13MP", screen:"6.5", cpu:"Unisoc", storage:"64GB"} },
+            { id: 28, name: "Edge 30 Fusion", brand: "motorola", price: 9999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Edge%2030%20Fusion.jfif", specs: {cam:"50MP", screen:"6.55", cpu:"SD888+", storage:"256GB"} },
+            { id: 29, name: "Moto G72", brand: "motorola", price: 5499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20G72.jfif", specs: {cam:"108MP", screen:"6.6", cpu:"Helio", storage:"128GB"} },
+            { id: 30, name: "Moto G23", brand: "motorola", price: 3999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20G23.jfif", specs: {cam:"50MP", screen:"6.5", cpu:"Helio", storage:"128GB"} },
+            { id: 31, name: "Xiaomi 13T Pro", brand: "xiaomi", price: 18999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2013T%20Pro.jfif", specs: {cam:"50MP", screen:"6.67", cpu:"Dimensity", storage:"512GB"} },
+            { id: 32, name: "Xiaomi 13T", brand: "xiaomi", price: 14999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2013T.jfif", specs: {cam:"50MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 33, name: "Xiaomi 12T", brand: "xiaomi", price: 10999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2012T.jfif", specs: {cam:"108MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 34, name: "POCO F5 Pro", brand: "xiaomi", price: 9999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/POCO%20F5%20Pro.jfif", specs: {cam:"64MP", screen:"6.67", cpu:"SD8+G1", storage:"256GB"} },
+            { id: 35, name: "POCO X6 Pro", brand: "xiaomi", price: 6499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/POCO%20X6%20Pro.jfif", specs: {cam:"64MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 36, name: "POCO M6 Pro", brand: "xiaomi", price: 3999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/POCO%20M6%20Pro.jfif", specs: {cam:"64MP", screen:"6.67", cpu:"Helio", storage:"256GB"} },
+            { id: 37, name: "POCO C65", brand: "xiaomi", price: 2599, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/POCO%20C65.jfif", specs: {cam:"50MP", screen:"6.74", cpu:"Helio", storage:"128GB"} },
+            { id: 38, name: "Xiaomi 13 Lite", brand: "xiaomi", price: 8499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2013%20Lite.jfif", specs: {cam:"50MP", screen:"6.55", cpu:"SD7", storage:"128GB"} },
+            { id: 39, name: "Xiaomi 12 Lite", brand: "xiaomi", price: 6999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2012%20Lite.jfif", specs: {cam:"108MP", screen:"6.55", cpu:"SD778", storage:"128GB"} },
+            { id: 40, name: "Black Shark 5", brand: "xiaomi", price: 11999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/SAHK%20BLACK%205.jfif", specs: {cam:"64MP", screen:"6.67", cpu:"SD870", storage:"128GB"} },
+            { id: 41, name: "Redmi Note 13 Pro+", brand: "redmi", price: 8999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2013%20Pro%2B.jfif", specs: {cam:"200MP", screen:"6.67", cpu:"Dimensity", storage:"256GB"} },
+            { id: 42, name: "Redmi Note 13 Pro", brand: "redmi", price: 6999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2013%20Pro.jfif", specs: {cam:"200MP", screen:"6.67", cpu:"Helio", storage:"256GB"} },
+            { id: 43, name: "Redmi Note 13", brand: "redmi", price: 4999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2013.jfif", specs: {cam:"108MP", screen:"6.67", cpu:"SD685", storage:"128GB"} },
+            { id: 44, name: "Redmi 13C", brand: "redmi", price: 2999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%2013C.jfif", specs: {cam:"50MP", screen:"6.74", cpu:"Helio", storage:"128GB"} },
+            { id: 45, name: "Redmi 12", brand: "redmi", price: 3299, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%2012.jfif", specs: {cam:"50MP", screen:"6.79", cpu:"Helio", storage:"128GB"} },
+            { id: 46, name: "Redmi A3", brand: "redmi", price: 1999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20A3.jfif", specs: {cam:"8MP", screen:"6.71", cpu:"Helio", storage:"64GB"} },
+            { id: 47, name: "Redmi Note 12S", brand: "redmi", price: 4499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2013%20Pro%2B.jfif", specs: {cam:"108MP", screen:"6.43", cpu:"Helio", storage:"256GB"} },
+            { id: 48, name: "Redmi Note 12", brand: "redmi", price: 3999, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2012S.jfif", specs: {cam:"50MP", screen:"6.67", cpu:"SD4", storage:"128GB"} },
+            { id: 49, name: "Redmi 10C", brand: "redmi", price: 2799, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%2010C.jfif", specs: {cam:"50MP", screen:"6.71", cpu:"SD680", storage:"64GB"} },
+            { id: 50, name: "Redmi 9A", brand: "redmi", price: 1799, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%209A.jfif", specs: {cam:"13MP", screen:"6.53", cpu:"Helio", storage:"32GB"} }
         ];
 
         const plans = [
-            { id: 1, name: "Plan Control 150", price: 150, gb: "8GB", apps: "Redes Sociales", extra: "Llamadas Ilimitadas" },
-            { id: 2, name: "Plan Plus 250", price: 249, gb: "20GB", apps: "RRSS + TikTok", extra: "1 App Streaming" },
-            { id: 3, name: "Plan Pro 360", price: 359, gb: "45GB", apps: "Gaming + RRSS", extra: "Netflix Incluido" },
-            { id: 4, name: "Plan Master 450", price: 449, gb: "80GB", apps: "Streaming Full", extra: "Youtube + Twitch" },
-            { id: 5, name: "Plan Ilimitado 568", price: 568, gb: "ILIMITADOS", apps: "Todo Ilimitado", extra: "Compartir Datos Sin Fin" },
-            { id: 6, name: "Plan Gamer Kick", price: 499, gb: "60GB", apps: "Kick + Twitch + YT", extra: "Gaming VIP Latencia" }
+            { id: 1, name: "Plan Control 150", price: 150, info: "8GB + RRSS Ilimitadas" },
+            { id: 2, name: "Plan Plus 250", price: 249, info: "20GB + TikTok + RRSS" },
+            { id: 3, name: "Plan Master 450", price: 449, info: "80GB + Streaming Full" },
+            { id: 4, name: "Ilimitado 568", price: 568, info: "Todo Ilimitado + Hotspot" }
         ];
 
-        let state = {
-            device: null,
-            plazo: 24,
-            plan: plans[1]
-        };
+        let selection = { dev: null, pz: 24, pl: plans[1] };
 
-        window.onload = () => {
-            renderDevices();
+        function renderDevices(filter = "") {
+            const grid = document.getElementById('device-grid');
+            const filtered = allDevices.filter(d => 
+                d.name.toLowerCase().includes(filter.toLowerCase()) || 
+                d.brand.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            grid.innerHTML = filtered.map(d => {
+                const discountedPrice = Math.floor(d.price * 0.6);
+                return `
+                <div onclick="openCotizador(${d.id})" class="device-card bg-white p-6 rounded-3xl cursor-pointer flex flex-col items-center group">
+                    <div class="relative w-full aspect-square flex items-center justify-center mb-4">
+                        <img src="${d.img}" class="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform">
+                        <div class="absolute top-0 right-0 bg-red-600 text-white text-[9px] font-black px-2 py-1 rounded-lg">-40%</div>
+                    </div>
+                    <p class="text-[9px] font-black text-movistar-blue uppercase mb-1">${d.brand}</p>
+                    <h4 class="text-sm font-bold text-slate-800 text-center mb-2 h-10 overflow-hidden line-clamp-2">${d.name}</h4>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-300 line-through">$${d.price.toLocaleString()}</span>
+                        <span class="text-lg font-black text-slate-900">$${discountedPrice.toLocaleString()}</span>
+                    </div>
+                    <div class="mt-4 w-full bg-slate-50 py-2 text-[9px] font-bold text-slate-400 text-center rounded-xl border border-dashed uppercase group-hover:bg-movistar-blue group-hover:text-white transition">Seleccionar</div>
+                </div>`;
+            }).join('');
+        }
+
+        function filterDevices() {
+            renderDevices(document.getElementById('search').value);
+        }
+
+        function openCotizador(id) {
+            selection.dev = allDevices.find(d => d.id === id);
+            updateSummary();
             renderPlazos();
             renderPlanes();
-            setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
-        };
-
-        function renderDevices() {
-            const grid = document.getElementById('device-grid');
-            grid.innerHTML = devices.map(d => `
-                <div onclick="selectDevice(${d.id})" class="bg-white p-6 rounded-[2rem] border hover:border-movistar-blue cursor-pointer transition-all group shadow-sm hover:shadow-xl text-center">
-                    <img src="${d.img}" class="h-40 mx-auto object-contain mb-4 group-hover:scale-105 transition-transform">
-                    <h4 class="font-bold text-slate-800">${d.name}</h4>
-                    <p class="text-xs text-slate-400 font-bold mt-1">Desde $${Math.floor(d.price/48)}/mes</p>
-                    <div class="mt-4 py-2 bg-slate-50 rounded-xl text-[10px] font-black group-hover:bg-movistar-blue group-hover:text-white transition-colors uppercase">Seleccionar</div>
-                </div>
-            `).join('');
+            navigateTo(2);
         }
 
         function renderPlazos() {
-            const container = document.getElementById('plazo-container');
-            container.innerHTML = [12, 24, 36, 48].map(m => `
-                <button onclick="setPlazo(${m})" id="btn-p-${m}" class="plazo-btn py-3 border-2 rounded-2xl font-black text-sm transition-all ${state.plazo === m ? 'border-movistar-blue bg-blue-50 text-movistar-blue' : 'border-slate-100 text-slate-400'}">
-                    ${m}M
-                </button>
+            document.getElementById('plazo-list').innerHTML = [12, 24, 36, 48].map(m => `
+                <button onclick="setPlazo(${m})" class="py-3 border-2 rounded-2xl font-black text-xs transition-all ${selection.pz === m ? 'border-movistar-blue bg-blue-50 text-movistar-blue' : 'border-slate-100 text-slate-400'}">${m} MESES</button>
             `).join('');
         }
 
         function renderPlanes() {
-            const container = document.getElementById('plan-container');
-            container.innerHTML = plans.map(p => `
-                <div class="relative">
-                    <input type="radio" name="plan" id="plan-${p.id}" class="plan-card-input hidden" ${state.plan.id === p.id ? 'checked' : ''} onchange="setPlan(${p.id})">
-                    <label for="plan-${p.id}" class="plan-card-label flex items-center justify-between p-5 border-2 border-slate-100 rounded-[1.5rem] cursor-pointer hover:bg-slate-50 transition-all">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-black text-slate-800">${p.name}</span>
-                                <span class="bg-movistar-green text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase">${p.gb}</span>
-                            </div>
-                            <p class="text-[10px] text-slate-500 font-medium">Incluye: ${p.apps} + ${p.extra}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-lg font-black text-movistar-blue">$${p.price}</span>
-                            <span class="text-[8px] font-bold text-slate-400 block uppercase">Al mes</span>
-                        </div>
-                    </label>
+            document.getElementById('plan-list').innerHTML = plans.map(p => `
+                <div onclick="setPlan(${p.id})" class="p-4 border-2 rounded-2xl cursor-pointer flex justify-between items-center transition-all ${selection.pl.id === p.id ? 'border-movistar-blue bg-blue-50' : 'border-slate-100'}">
+                    <div><p class="font-black text-slate-800 text-xs">${p.name}</p><p class="text-[9px] text-slate-400 font-bold">${p.info}</p></div>
+                    <p class="font-black text-movistar-blue text-sm">$${p.price}</p>
                 </div>
             `).join('');
         }
 
-        function selectDevice(id) {
-            state.device = devices.find(d => d.id === id);
-            updateSummary();
-            navigateTo(2);
-        }
-
-        function setPlazo(m) {
-            state.plazo = m;
-            renderPlazos();
-            updateSummary();
-        }
-
-        function setPlan(id) {
-            state.plan = plans.find(p => p.id === id);
-            updateSummary();
-        }
+        function setPlazo(m) { selection.pz = m; renderPlazos(); updateSummary(); }
+        function setPlan(id) { selection.pl = plans.find(p => p.id === id); renderPlanes(); updateSummary(); }
 
         function updateSummary() {
-            const eqCuota = Math.floor(state.device.price / state.plazo);
-            const total = eqCuota + state.plan.price;
-
-            document.getElementById('sum-img').src = state.device.img;
-            document.getElementById('sum-name').innerText = state.device.name;
-            document.getElementById('sum-eq').innerText = `$${eqCuota}`;
-            document.getElementById('sum-plan').innerText = `$${state.plan.price}`;
-            document.getElementById('sum-total').innerText = total.toLocaleString();
+            const devMonthly = (selection.dev.price * 0.6) / selection.pz;
+            const total = Math.floor(devMonthly + selection.pl.price);
+            
+            document.getElementById('sel-img').src = selection.dev.img;
+            document.getElementById('sel-name').innerText = selection.dev.name;
+            document.getElementById('sel-total').innerText = total.toLocaleString();
+            
+            const s = selection.dev.specs;
+            document.getElementById('sel-specs').innerHTML = `
+                <span class="bg-slate-100 text-[9px] px-3 py-1 rounded-full font-bold">📷 ${s.cam}</span>
+                <span class="bg-slate-100 text-[9px] px-3 py-1 rounded-full font-bold">📱 ${s.screen}"</span>
+                <span class="bg-slate-100 text-[9px] px-3 py-1 rounded-full font-bold">💾 ${s.storage}</span>
+            `;
         }
 
         function navigateTo(stage) {
@@ -252,15 +374,14 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function finishOrder(e) {
+        function confirmOrder(e) {
             e.preventDefault();
             const folio = `MX-MOV-${Math.floor(100000 + Math.random() * 900000)}`;
-            document.getElementById('btn-final').innerText = "PROCESANDO CRÉDITO...";
-            setTimeout(() => {
-                document.getElementById('folio').innerText = folio;
-                navigateTo(4);
-            }, 2000);
+            document.getElementById('folio').innerText = folio;
+            navigateTo(4);
         }
+
+        window.onload = () => renderDevices();
     </script>
 </body>
 </html>
