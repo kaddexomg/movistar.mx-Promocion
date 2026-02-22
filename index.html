@@ -1,266 +1,660 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movistar | Cambia tu Vida con la Mejor Red</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root { --m-blue: #019DF0; --m-dark: #001935; --m-green: #5BC500; }
-        body { font-family: 'Onest', sans-serif; background-color: #F4F7F9; overflow-x: hidden; }
-        .nav-link { cursor: pointer; position: relative; font-weight: 700; transition: 0.3s; }
-        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background: var(--m-blue); transition: 0.3s; }
-        .nav-link:hover::after { width: 100%; }
-        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
-        .active-section { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card-eq:hover { border-color: var(--m-blue); transform: translateY(-5px); }
-        .btn-m { background: var(--m-blue); color: white; transition: 0.3s; }
-        .btn-m:hover { background: #0081c7; transform: scale(1.05); }
-    </style>
-</head>
-<body>
+import React, { useState, useEffect } from 'react';
+import { 
+  Phone, Smartphone, MapPin, Star, ChevronRight, CheckCircle, 
+  Wifi, ShieldCheck, Menu, X, ArrowRight, Youtube, Music
+} from 'lucide-react';
 
-    <nav class="bg-white border-b sticky top-0 z-[100] shadow-sm">
-        <div class="container mx-auto px-4 h-20 flex justify-between items-center">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Movistar_logo.svg/1200px-Movistar_logo.svg.png" class="h-10 cursor-pointer" onclick="showSection('inicio')">
-            <div class="hidden lg:flex gap-8 text-[11px] uppercase tracking-tighter text-slate-600">
-                <span class="nav-link" onclick="showSection('inicio')">Inicio</span>
-                <span class="nav-link" onclick="showSection('equipos')">Equipos</span>
-                <span class="nav-link" onclick="showSection('prepago')">Prepago</span>
-                <span class="nav-link" onclick="showSection('cobertura')">Red & Cobertura</span>
+// --- BASE DE DATOS DE EQUIPOS ---
+const DEVICES = [
+  { id: 51, name: "iPhone 17 Pro Max", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017%20Pro%20Max.jfif", specs: "Chip A19 Pro | 512GB" },
+  { id: 52, name: "iPhone 17", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017.jfif", specs: "Chip A18 | 256GB" },
+  { id: 53, name: "iPhone 17 SE", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2017%20SE.jfif", specs: "Chip A18 | 128GB" },
+  { id: 1, name: "iPhone 15 Pro Max", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Pro%20Max.jfif", specs: "Titanio | A17 Pro" },
+  { id: 2, name: "iPhone 15 Pro", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Pro.jfif", specs: "Titanio | A17 Pro" },
+  { id: 3, name: "iPhone 15 Plus", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Plus.jfif", specs: "A16 Bionic | 6.7\"" },
+  { id: 4, name: "iPhone 15", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015.jfif", specs: "A16 Bionic | 6.1\"" },
+  { id: 5, name: "iPhone 14 Pro Max", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2014%20Pro%20Max.jfif", specs: "Dynamic Island | A16" },
+  { id: 7, name: "iPhone 13", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2013.jfif", specs: "A15 | 128GB" },
+  { id: 8, name: "iPhone 12", brand: "apple", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2012.jfif", specs: "A14 | 6.1\"" },
+  { id: 11, name: "Galaxy S24 Ultra", brand: "samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024%20ultra.jfif", specs: "SD 8 Gen 3 | 512GB" },
+  { id: 12, name: "Galaxy S24+", brand: "samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024%20%2B.jfif", specs: "SD 8 Gen 3 | 256GB" },
+  { id: 13, name: "Galaxy S24", brand: "samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024.jfif", specs: "SD 8 Gen 3 | 256GB" },
+  { id: 14, name: "Galaxy Z Fold 5", brand: "samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20Z%20Fold%205.jfif", specs: "Plegable | 512GB" },
+  { id: 16, name: "Galaxy A54", brand: "samsung", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/Galaxy%20A54.jfif", specs: "5G | Exynos 1380" },
+  { id: 21, name: "Edge 40 Pro", brand: "motorola", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Edge%2040%20Pro.jfif", specs: "SD 8 Gen 2 | 256GB" },
+  { id: 23, name: "Razr 40 Ultra", brand: "motorola", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Razr%2040%20Ultra.jfif", specs: "Flexible | SD 8+" },
+  { id: 24, name: "Moto G84", brand: "motorola", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Moto%20G84.jfif", specs: "pOLED 120Hz | 256GB" },
+  { id: 31, name: "Xiaomi 13T Pro", brand: "xiaomi", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Xiaomi%2013T%20Pro.jfif", specs: "Leica | 512GB" },
+  { id: 35, name: "POCO X6 Pro", brand: "xiaomi", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/POCO%20X6%20Pro.jfif", specs: "Dimensity 8300 Ultra" },
+  { id: 41, name: "Redmi Note 13 Pro+", brand: "redmi", img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2013%20Pro%2B.jfif", specs: "Curvo | 200MP" }
+  // (Lista resumida para el render, pero la lógica soporta los 53)
+];
+
+// --- BASE DE DATOS DE PLANES (Extraída de la imagen) ---
+const PLANS = [
+  { id: 'pro8', name: 'Pro 8', gbBase: '8 GB', gbPromo: '16 GB x12 meses', price: 85, color: 'bg-[#ff6b4a]', apps: ['WhatsApp', 'FB', 'IG'], extra: 'TikTok Ilimitado x6 meses' },
+  { id: 'pro10', name: 'Pro 10', gbBase: '10 GB', gbPromo: '20 GB x12 meses', price: 100, color: 'bg-[#00a9e0]', apps: ['WhatsApp', 'FB', 'IG'], extra: 'TikTok Ilimitado x6 meses' },
+  { id: 'pro12', name: 'Pro 12', gbBase: '12 GB', gbPromo: '24 GB x12 meses', price: 115, color: 'bg-[#00a9e0]', apps: ['WhatsApp', 'FB', 'IG'], extra: 'TikTok Ilimitado x6 meses' },
+  { id: 'pro14', name: 'Pro 14', gbBase: '14 GB', gbPromo: '28 GB x12 meses', price: 130, color: 'bg-[#00a9e0]', apps: ['WhatsApp', 'FB', 'IG'], extra: 'TikTok Ilimitado x6 meses' },
+  { id: 'pro18', name: 'Pro 18', gbBase: '18 GB', gbPromo: '36 GB x12 meses', price: 150, color: 'bg-[#78d64b]', apps: ['WhatsApp', 'FB', 'IG', 'X', 'Snap'], extra: 'Navegación YouTube x3 meses' },
+  { id: 'pro25', name: 'Pro 25', gbBase: '25 GB', gbPromo: '50 GB x12 meses', price: 175, color: 'bg-[#9b26b6]', apps: ['Todas las Redes'], extra: 'YouTube Premium x3 + Perplexity' },
+  { id: 'pro35', name: 'Pro 35', gbBase: '35 GB', gbPromo: '70 GB x12 meses', price: 225, color: 'bg-[#9b26b6]', apps: ['Todas las Redes'], extra: 'YouTube Premium x3 + Perplexity' },
+  { id: 'pro_ili', name: 'Pro Ilimitado', gbBase: 'Ilimitados', gbPromo: '+25GB Roaming', price: 290, color: 'bg-[#e5007f]', apps: ['Todas las Redes'], extra: 'YouTube Premium x3 + Perplexity' },
+];
+
+export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('home'); // 'home', 'portabilidad'
+
+  // Variables de tema
+  const theme = {
+    blue: '#019DF4',
+    green: '#5BC500',
+    dark: '#0B2739'
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 selection:bg-[#5BC500] selection:text-white">
+      {/* --- NAVBAR --- */}
+      <nav className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center cursor-pointer" onClick={() => setActiveTab('home')}>
+              {/* Logo Movistar Simulado */}
+              <div className="text-[#019DF4] text-4xl font-extrabold tracking-tighter flex items-center">
+                <span className="mr-1 text-[#5BC500]">M</span>ovistar
+              </div>
             </div>
-            <button class="bg-slate-900 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase">Soy Movistar</button>
-        </div>
-    </nav>
-
-    <div id="inicio" class="section active-section">
-        <div class="bg-gradient-to-r from-[#005FB8] to-[#019DF0] py-20 text-white relative">
-            <div class="container mx-auto px-4 grid md:grid-cols-2 items-center">
-                <div>
-                    <h2 class="text-6xl font-extrabold italic mb-6">AHORA TIENES LA MEJOR RED.</h2>
-                    <p class="text-xl mb-8 opacity-90">Cámbiate hoy con nosotros y estrena el equipo que siempre quisiste con 5G ilimitado.</p>
-                    <button onclick="showSection('equipos')" class="bg-white text-[#019DF0] px-10 py-4 rounded-full font-black uppercase text-sm shadow-xl">Ver Promociones</button>
-                </div>
-                <img src="https://www.movistar.com.mx/documents/44823157/163351918/Equipo-Hero-I15.png" class="hidden md:block h-[400px] drop-shadow-2xl">
-            </div>
-        </div>
-    </div>
-
-    <div id="equipos" class="section py-12">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-black text-[#001935] italic mb-8 uppercase">Catálogo de Equipos & Tablets</h2>
             
-            <div class="bg-white p-6 rounded-3xl shadow-sm mb-10 flex flex-wrap gap-4 items-center">
-                <select id="filter-brand" onchange="filterGallery()" class="p-3 bg-slate-50 border rounded-xl font-bold text-sm">
-                    <option value="all">Todas las Marcas</option>
-                    <option value="apple">Apple</option>
-                    <option value="samsung">Samsung</option>
-                    <option value="motorola">Motorola</option>
-                    <option value="xiaomi">Xiaomi</option>
-                </select>
-                <select id="filter-range" onchange="filterGallery()" class="p-3 bg-slate-50 border rounded-xl font-bold text-sm">
-                    <option value="all">Todas las Gamas</option>
-                    <option value="alta">Gama Alta</option>
-                    <option value="media">Gama Media</option>
-                    <option value="baja">Gama Inicial</option>
-                    <option value="tablet">Tablets</option>
-                </select>
-                <input type="text" id="search" onkeyup="filterGallery()" placeholder="Buscar modelo..." class="p-3 border rounded-xl flex-grow font-bold outline-none focus:border-blue-400">
+            {/* Desktop Menu */}
+            <div className="hidden md:flex space-x-8 items-center">
+              <button onClick={() => setActiveTab('home')} className="text-gray-600 hover:text-[#019DF4] font-semibold transition">Inicio</button>
+              <a href="#planes" className="text-gray-600 hover:text-[#019DF4] font-semibold transition">Planes</a>
+              <a href="#equipos" className="text-gray-600 hover:text-[#019DF4] font-semibold transition">Equipos</a>
+              <a href="#cobertura" className="text-gray-600 hover:text-[#019DF4] font-semibold transition">Cobertura 5G</a>
+              <button 
+                onClick={() => setActiveTab('portabilidad')}
+                className="bg-[#5BC500] text-white px-6 py-2.5 rounded-full font-bold hover:bg-[#4ba300] hover:shadow-lg transition transform hover:-translate-y-0.5"
+              >
+                Pásate a Movistar
+              </button>
             </div>
 
-            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                </div>
-        </div>
-    </div>
-
-    <div id="cobertura" class="section py-20 text-center">
-        <div class="max-w-3xl mx-auto px-4">
-            <i class="fas fa-tower-cell text-6xl text-movistar-blue mb-6"></i>
-            <h2 class="text-4xl font-black mb-4">COBERTURA NACIONAL 5G</h2>
-            <p class="text-slate-500 font-medium text-lg leading-relaxed">Nuestra red se expande para darte la mayor velocidad en cada rincón de México. Conéctate a la red más moderna con Movistar.</p>
-            <div class="mt-10 grid grid-cols-3 gap-4">
-                <div class="p-6 bg-white rounded-3xl border shadow-sm"><h5 class="font-black text-2xl">+500</h5><p class="text-xs font-bold text-slate-400">Ciudades</p></div>
-                <div class="p-6 bg-white rounded-3xl border shadow-sm"><h5 class="font-black text-2xl">99%</h5><p class="text-xs font-bold text-slate-400">Estabilidad</p></div>
-                <div class="p-6 bg-white rounded-3xl border shadow-sm"><h5 class="font-black text-2xl">5G</h5><p class="text-xs font-bold text-slate-400">Velocidad</p></div>
+            {/* Mobile menu button */}
+            <div className="md:hidden flex items-center">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-600">
+                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div id="culminar" class="section py-16">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden grid md:grid-cols-2 border">
-                <div class="p-12 bg-slate-50 border-r text-center">
-                    <img id="final-img" src="" class="h-64 mx-auto mb-6 drop-shadow-xl">
-                    <h3 id="final-name" class="text-2xl font-black italic"></h3>
-                    <p class="text-movistar-blue font-black mt-2 uppercase tracking-widest text-xs">Equipo Seleccionado</p>
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-xl">
+            <div className="px-4 pt-2 pb-6 space-y-2">
+              <button onClick={() => {setActiveTab('home'); setIsMenuOpen(false)}} className="block w-full text-left px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Inicio</button>
+              <a href="#planes" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Planes</a>
+              <a href="#equipos" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Equipos</a>
+              <button 
+                onClick={() => {setActiveTab('portabilidad'); setIsMenuOpen(false);}}
+                className="w-full mt-4 bg-[#019DF4] text-white px-3 py-4 rounded-xl font-bold text-center"
+              >
+                Portabilidad
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* --- RENDER PRINCIPAL CONDICIONAL --- */}
+      {activeTab === 'home' ? (
+        <main>
+          {/* HERO SECTION */}
+          <section className="relative bg-[#0B2739] overflow-hidden">
+            <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center mix-blend-overlay"></div>
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#019DF4]/40 to-transparent transform skew-x-12 translate-x-20"></div>
+            
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 lg:py-32 flex flex-col lg:flex-row items-center">
+              <div className="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0">
+                <span className="inline-block py-1 px-3 rounded-full bg-[#5BC500]/20 text-[#5BC500] font-bold text-sm tracking-wide mb-4 border border-[#5BC500]/50">
+                  PROMOCIÓN EXCLUSIVA ONLINE
+                </span>
+                <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                  Cámbiate hoy y recibe <br/>
+                  <span className="text-[#5BC500]">el doble de Gigas</span>
+                </h1>
+                <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
+                  Conserva tu número, elige uno de nuestros planes Pro con 50% de descuento los primeros 2 meses y estrena el equipo que siempre quisiste a meses sin intereses.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <button 
+                    onClick={() => setActiveTab('portabilidad')}
+                    className="bg-[#5BC500] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#4ba300] transition flex items-center justify-center gap-2 shadow-lg shadow-[#5BC500]/30"
+                  >
+                    Iniciar Portabilidad <ArrowRight size={20} />
+                  </button>
+                  <a href="#planes" className="bg-transparent border-2 border-white/30 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition text-center">
+                    Ver Planes
+                  </a>
                 </div>
-                <form onsubmit="finishProcess(event)" class="p-12 space-y-4">
-                    <h2 class="text-2xl font-black uppercase italic mb-6">Finalizar Trámite</h2>
-                    <input type="text" id="client-name" placeholder="Nombre completo" required class="w-full p-4 bg-white border rounded-2xl font-bold">
-                    <input type="tel" id="client-phone" placeholder="Número actual (10 dígitos)" required class="w-full p-4 bg-white border rounded-2xl font-bold">
-                    
-                    <div class="grid grid-cols-1 gap-4">
-                        <select id="state-sel" onchange="loadSucursales()" class="w-full p-4 bg-white border rounded-2xl font-bold outline-none focus:border-blue-400">
-                            <option value="">Selecciona tu Estado</option>
-                        </select>
-                        <select id="suc-sel" required class="w-full p-4 bg-white border rounded-2xl font-bold outline-none focus:border-blue-400">
-                            <option value="">Primero elige estado</option>
-                        </select>
+              </div>
+              <div className="lg:w-1/2 relative">
+                {/* Mockup de teléfonos */}
+                <div className="relative w-full max-w-md mx-auto">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#019DF4] to-[#5BC500] rounded-full blur-3xl opacity-30 animate-pulse"></div>
+                  <img src="https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/IPHONE/iPhone%2015%20Pro%20Max.jfif" alt="iPhone Oferta" className="relative z-10 rounded-3xl shadow-2xl border-4 border-gray-800 transform -rotate-6 hover:rotate-0 transition duration-500 w-3/4 mx-auto" onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION: PLANES PRO (Basado en la imagen) */}
+          <section id="planes" className="py-20 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-[#0B2739] mb-4">Planes Pro creados para ti</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto text-lg">Todos nuestros planes incluyen Minutos y SMS ilimitados en México, EUA y Canadá. Aplica descuento del 50% por 2 meses en portabilidad.</p>
+              </div>
+
+              {/* Grid de planes estilo tabla horizontal scroll en móviles */}
+              <div className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory hide-scrollbar">
+                {PLANS.map((plan) => (
+                  <div key={plan.id} className="min-w-[280px] sm:min-w-[320px] bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden snap-center flex flex-col transform hover:-translate-y-2 transition duration-300">
+                    <div className={`${plan.color} py-6 text-center text-white relative overflow-hidden`}>
+                      <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
+                      <h3 className="text-3xl font-bold italic drop-shadow-md">{plan.name}</h3>
                     </div>
+                    
+                    <div className="p-6 flex-grow flex flex-col">
+                      <div className="flex justify-between items-end mb-4 pb-4 border-b border-gray-100">
+                        <div>
+                          <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">GB Base</p>
+                          <p className="text-3xl font-black text-[#0B2739]">{plan.gbBase}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-[#019DF4] font-bold uppercase">Promo</p>
+                          <p className="text-lg font-bold text-[#019DF4]">{plan.gbPromo}</p>
+                        </div>
+                      </div>
 
-                    <button class="w-full bg-[#019DF0] text-white py-5 rounded-2xl font-black uppercase text-sm shadow-xl hover:bg-sky-500 transition-all mt-6">Enviar a WhatsApp</button>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase text-center mt-4 italic">Presenta tu INE en sucursal al acudir.</p>
-                </form>
+                      <div className="mb-4">
+                        <p className="text-sm text-gray-500 mb-2 font-medium">Apps Incluidas:</p>
+                        <div className="flex gap-2 flex-wrap">
+                          {plan.apps.map(app => (
+                            <span key={app} className="text-xs font-bold bg-gray-100 text-gray-700 px-2 py-1 rounded-md">{app}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-xl p-3 mb-6 border border-gray-100 flex items-center gap-3 mt-auto">
+                        {plan.extra.includes('YouTube') ? <Youtube className="text-red-600" size={24}/> : <Music className="text-black" size={24}/>}
+                        <p className="text-sm font-bold text-gray-800 leading-tight">{plan.extra}</p>
+                      </div>
+
+                      <div className="text-center mt-auto">
+                        <p className="text-sm text-gray-500 line-through">Normal: ${(plan.price * 2) - 1}</p>
+                        <div className="flex justify-center items-start mt-1 mb-4">
+                          <span className="text-2xl font-bold text-[#0B2739] mt-1">$</span>
+                          <span className="text-5xl font-black text-[#0B2739] tracking-tighter">{plan.price}</span>
+                          <span className="text-lg text-gray-500 mt-4 ml-1">/mes</span>
+                        </div>
+                        <p className="text-xs text-[#e5007f] font-bold uppercase tracking-widest mb-4">x2 meses</p>
+                        
+                        <button 
+                          onClick={() => setActiveTab('portabilidad')}
+                          className={`w-full py-3 rounded-xl font-bold text-white shadow-md transition ${plan.color} hover:opacity-90`}
+                        >
+                          Lo quiero
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-        </div>
-    </div>
+          </section>
 
-    <div class="fixed bottom-6 right-6 z-[200]">
-        <button onclick="toggleBot()" class="w-16 h-16 bg-[#019DF0] text-white rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-110 transition-transform">
-            <i class="fas fa-robot"></i>
-        </button>
-        <div id="bot-window" class="hidden absolute bottom-20 right-0 w-80 bg-white rounded-3xl shadow-2xl border overflow-hidden flex flex-col">
-            <div class="bg-movistar-dark p-4 text-white font-black flex justify-between items-center">
-                <span>Asistente Movistar</span>
-                <i onclick="toggleBot()" class="fas fa-times cursor-pointer"></i>
-            </div>
-            <div id="chat-content" class="h-80 overflow-y-auto p-4 space-y-4 bg-slate-50 text-[12px]">
-                <div class="bg-blue-100 p-3 rounded-2xl rounded-tl-none font-bold">¡Hola! Soy tu asistente. Puedo ayudarte con tu línea. ¿Qué deseas consultar?</div>
-            </div>
-            <div class="p-2 border-t flex gap-1">
-                <button onclick="botQuery('recarga')" class="text-[10px] bg-slate-100 p-2 rounded-lg font-black uppercase flex-grow">Mi Recarga</button>
-                <button onclick="botQuery('status')" class="text-[10px] bg-slate-100 p-2 rounded-lg font-black uppercase flex-grow">Mi Estatus</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // --- BASE DE DATOS DE SUCURSALES (DOCUMENTO COMPLETO) ---
-        const dataSucursales = {
-            "AGUASCALIENTES": ["MOVISTAR PLAZA VELARIA MALL", "MOVISTAR PLAZA VILLA ASUNCION", "MOVISTAR BOSQUES AGUASCALIENTES", "MOVISTAR GUADALUPE AGUASCALIENTES", "MOVISTAR PARQUE HIDALGO AGS", "MOVISTAR CENTRO AGUASCALIENTES"],
-            "BAJA CALIFORNIA": ["MOVISTAR PACIFICO TIJUANA", "MOVISTAR MEXICALI", "MOVISTAR MACROPLAZA DOS TIJUANA", "MOVISTAR PASEO TIJUANA 2000", "MOVISTAR PASEO DE LOS HEROES", "MOVISTAR ALAMEDA OTAY", "MOVISTAR CENTRO ENSENADA", "MOVISTAR JUSTO SIERRA", "MOVISTAR PABELLON ROSARITO"],
-            "CDMX": ["MOVISTAR GALERIAS DE LAS ESTRELLAS", "MOVISTAR PORTAL CENTENARIO", "MOVISTAR AEROPUERTO CDMX", "MOVISTAR PASEO ACOXPA", "MOVISTAR GALERIAS INSURGENTES", "MOVISTAR REFORMA 222", "MOVISTAR GRAN SUR", "MOVISTAR CENTRO COMERCIAL SANTA FE", "MOVISTAR CENTRO HISTORICO", "MOVISTAR PARQUE DELTA", "MOVISTAR FORUM BUENAVISTA"],
-            "EDO. MEXICO": ["MOVISTAR PLAZA CAÑADA", "MOVISTAR MARIANO MATAMOROS", "MOVISTAR TOWN CENTER ZUMPANGO", "MOVISTAR PLAZA ARKANA", "MOVISTAR LUNA PARK", "MOVISTAR MUNDO E", "MOVISTAR PLAZA SATELITE", "MOVISTAR LAS AMERICAS", "MOVISTAR PATIO ECATEPEC"],
-            "VERACRUZ": ["MOVISTAR VERACRUZ CENTRO", "MOVISTAR POZA RICA", "MOVISTAR CORDOBA"],
-            "YUCATAN": ["MOVISTAR MACROPLAZA MERIDA", "MOVISTAR GRAN PLAZA MERIDA", "MOVISTAR MERIDA 56", "MOVISTAR PLAZA DORADA"]
-        };
-
-        // --- EQUIPOS (53 + TABLETS) ---
-        const catalogo = [
-            { id: 1, name: "iPhone 15 Pro Max", brand: "apple", range: "alta", price: 28999, img: "https://www.movistar.com.mx/documents/44823157/163351918/Equipo-Hero-I15.png" },
-            { id: 2, name: "Galaxy S24 Ultra", brand: "samsung", range: "alta", price: 26500, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/SAMGMUG/s%2024%20ultra.jfif" },
-            { id: 3, name: "iPad Pro 11' M2", brand: "apple", range: "tablet", price: 19499, img: "https://m.media-amazon.com/images/I/81gC7frRJyL.jpg" },
-            { id: 4, name: "Galaxy Tab S9", brand: "samsung", range: "tablet", price: 15999, img: "https://m.media-amazon.com/images/I/51A3n3u3L-L._AC_SL1200_.jpg" },
-            { id: 5, name: "Redmi Note 13", brand: "xiaomi", range: "media", price: 5499, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/XIAOMI/Redmi%20Note%2013%20Pro%2B.jfif" },
-            { id: 6, name: "Moto g24 Power", brand: "motorola", range: "baja", price: 3299, img: "https://raw.githubusercontent.com/kaddexomg/moxistar.mx/refs/heads/main/MOTOROLA/Edge%2040%20Pro.jfif" }
-            // Cargar aquí los 53 equipos siguiendo este formato
-        ];
-
-        let selectedDev = null;
-
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
-            document.getElementById(id).classList.add('active-section');
-            window.scrollTo(0,0);
-        }
-
-        function renderGallery() {
-            const container = document.getElementById('gallery');
-            container.innerHTML = catalogo.map(eq => `
-                <div class="card-eq bg-white p-6 rounded-[2rem] border-2 border-slate-50 transition-all flex flex-col items-center shadow-sm">
-                    <img src="${eq.img}" class="h-44 object-contain mb-4">
-                    <span class="text-[9px] font-black text-blue-500 uppercase">${eq.range}</span>
-                    <h4 class="font-bold text-sm text-center mb-4 h-10">${eq.name}</h4>
-                    <div class="text-xl font-black text-slate-800">$${(eq.price/24 + 449).toFixed(0)} <span class="text-[10px] opacity-40">/mes</span></div>
-                    <button onclick="goFinish(${eq.id})" class="mt-4 w-full py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Lo quiero</button>
+          {/* SECTION: EQUIPOS / CATÁLOGO */}
+          <section id="equipos" className="py-20 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-[#0B2739] mb-4">Estrena con tu Plan</h2>
+                  <p className="text-gray-600 text-lg">Llévate el equipo de tus sueños financiado en tu factura mensual.</p>
                 </div>
-            `).join('');
-        }
+                <button 
+                  onClick={() => setActiveTab('portabilidad')}
+                  className="mt-6 md:mt-0 text-[#019DF4] font-bold flex items-center hover:text-[#007bb5] transition"
+                >
+                  Ver catálogo completo <ChevronRight size={20} />
+                </button>
+              </div>
 
-        function filterGallery() {
-            const brand = document.getElementById('filter-brand').value;
-            const range = document.getElementById('filter-range').value;
-            const search = document.getElementById('search').value.toLowerCase();
-            
-            const filtered = catalogo.filter(eq => {
-                const matchBrand = brand === 'all' || eq.brand === brand;
-                const matchRange = range === 'all' || eq.range === range;
-                const matchSearch = eq.name.toLowerCase().includes(search);
-                return matchBrand && matchRange && matchSearch;
-            });
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                {DEVICES.slice(0, 10).map((device) => (
+                  <div key={device.id} className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition duration-300 border border-transparent hover:border-[#019DF4]/30 group cursor-pointer" onClick={() => setActiveTab('portabilidad')}>
+                    <div className="h-40 md:h-48 mb-4 relative p-2 flex items-center justify-center">
+                      <img src={device.img} alt={device.name} className="max-h-full max-w-full object-contain transform group-hover:scale-110 transition duration-500" onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1598327105666-5b89351cb31b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'} />
+                      <div className="absolute top-0 right-0 bg-[#5BC500] text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">NUEVO</div>
+                    </div>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">{device.brand}</p>
+                    <h3 className="font-bold text-gray-800 leading-tight mb-2 h-10">{device.name}</h3>
+                    <p className="text-xs text-gray-500 mb-4">{device.specs}</p>
+                    <div className="text-sm font-bold text-[#019DF4] bg-[#019DF4]/10 py-1.5 px-3 rounded-lg text-center group-hover:bg-[#019DF4] group-hover:text-white transition">
+                      Desde $199/mes
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
-            const container = document.getElementById('gallery');
-            container.innerHTML = filtered.map(eq => `
-                <div class="card-eq bg-white p-6 rounded-[2rem] border-2 border-slate-50 transition-all flex flex-col items-center shadow-sm">
-                    <img src="${eq.img}" class="h-44 object-contain mb-4">
-                    <span class="text-[9px] font-black text-blue-500 uppercase">${eq.range}</span>
-                    <h4 class="font-bold text-sm text-center mb-4 h-10">${eq.name}</h4>
-                    <button onclick="goFinish(${eq.id})" class="mt-4 w-full py-3 bg-slate-100 rounded-xl text-[10px] font-black uppercase hover:bg-blue-500 hover:text-white transition">Seleccionar</button>
+          {/* SECTION: COBERTURA 5G */}
+          <section id="cobertura" className="py-20 bg-[#0B2739] text-white relative overflow-hidden">
+            <div className="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#019DF4" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.3,-46.3C90.8,-33.5,96.8,-18.1,97.3,-2.4C97.8,13.3,92.8,29.3,83.5,42.5C74.2,55.7,60.6,66.1,45.8,74.5C31,82.9,15.5,89.3,0.3,88.8C-14.9,88.3,-29.8,80.9,-43.3,71.7C-56.8,62.5,-68.9,51.5,-77.4,38.1C-85.9,24.7,-90.8,8.9,-89.1,-6.3C-87.4,-21.5,-79.1,-36.1,-68.4,-47.9C-57.7,-59.7,-44.6,-68.7,-30.9,-75.7C-17.2,-82.7,-2.9,-87.7,11.3,-88.1C25.5,-88.5,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
+              </svg>
+            </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center gap-12">
+              <div className="md:w-1/2">
+                <Wifi size={48} className="text-[#5BC500] mb-6" />
+                <h2 className="text-3xl md:text-5xl font-extrabold mb-6">Conéctate con la red 5G más rápida de México</h2>
+                <p className="text-lg text-gray-300 mb-8">Nuestra infraestructura renovada te garantiza señal en donde más lo necesitas. Navega, juega y streamea sin interrupciones con Movistar.</p>
+                <ul className="space-y-4">
+                  {[
+                    'Cobertura en los 32 estados de la República.',
+                    'Llamadas en alta definición (VoLTE).',
+                    'Tecnología de última generación ecológica.'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 font-medium text-gray-200">
+                      <CheckCircle className="text-[#5BC500]" size={24} /> {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="md:w-1/2 w-full">
+                <div className="bg-white/10 p-2 rounded-3xl backdrop-blur-sm border border-white/20 shadow-2xl">
+                  {/* Simulando un mapa */}
+                  <div className="aspect-video bg-[#001f35] rounded-2xl relative overflow-hidden flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center">
+                     <div className="absolute inset-0 bg-[#0B2739]/60"></div>
+                     <div className="relative z-10 flex flex-col items-center">
+                        <MapPin size={64} className="text-[#5BC500] animate-bounce" />
+                        <div className="mt-4 bg-white text-[#0B2739] px-6 py-2 rounded-full font-bold shadow-lg">Ver mapa de cobertura interactivo</div>
+                     </div>
+                  </div>
                 </div>
-            `).join('');
-        }
+              </div>
+            </div>
+          </section>
 
-        function initData() {
-            const stateSel = document.getElementById('state-sel');
-            Object.keys(dataSucursales).forEach(st => {
-                stateSel.innerHTML += `<option value="${st}">${st}</option>`;
-            });
-            renderGallery();
-        }
+          {/* SECTION: TESTIMONIOS */}
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+               <div className="text-center mb-16">
+                <h2 className="text-3xl font-extrabold text-[#0B2739] mb-4">Lo que dicen nuestros usuarios</h2>
+                <p className="text-gray-600">Únete a los millones de mexicanos que ya disfrutan de Movistar.</p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-8">
+                {[
+                  { name: 'Carlos M.', text: 'El trámite de portabilidad fue rapidísimo. En 24 horas ya tenía mi línea activa con el Pro 14 y el descuento es real.', rating: 5 },
+                  { name: 'Ana Sofía R.', text: 'Pude sacar el iPhone 15 Pro Max a meses y el plan ilimitado me funciona perfecto para mi trabajo. Excelente cobertura en CDMX.', rating: 5 },
+                  { name: 'Luis D.', text: 'Las apps ilimitadas me salvan la vida. Muy contento con el servicio al cliente y la app Mi Movistar es súper fácil de usar.', rating: 4 }
+                ].map((testimonial, i) => (
+                  <div key={i} className="bg-white p-8 rounded-3xl shadow-lg border-t-4 border-[#019DF4]">
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(5)].map((_, j) => (
+                        <Star key={j} size={20} className={j < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 italic mb-6">"{testimonial.text}"</p>
+                    <div className="font-bold text-[#0B2739]">- {testimonial.name}</div>
+                    <div className="text-xs text-gray-400">Usuario Verificado</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </main>
+      ) : (
+        /* --- WIZARD DE PORTABILIDAD --- */
+        <PortabilidadWizard onCancel={() => setActiveTab('home')} />
+      )}
 
-        function loadSucursales() {
-            const st = document.getElementById('state-sel').value;
-            const sucSel = document.getElementById('suc-sel');
-            sucSel.innerHTML = '<option value="">Selecciona Sucursal</option>';
-            if(st) {
-                dataSucursales[st].forEach(s => {
-                    sucSel.innerHTML += `<option value="${s}">${s}</option>`;
-                });
-            }
-        }
+      {/* FOOTER */}
+      <footer className="bg-[#0B2739] text-gray-400 py-12 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <div className="text-[#019DF4] text-2xl font-extrabold tracking-tighter mb-6">
+              <span className="text-[#5BC500]">M</span>ovistar
+            </div>
+            <p className="text-sm">Conectando a México con el mundo a través de la mejor tecnología.</p>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Servicios</h4>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:text-white transition">Telefonía Móvil</a></li>
+              <li><a href="#" className="hover:text-white transition">Internet en Casa</a></li>
+              <li><a href="#" className="hover:text-white transition">Planes Pospago</a></li>
+              <li><a href="#" className="hover:text-white transition">Recargas</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Soporte</h4>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:text-white transition">Centro de Ayuda</a></li>
+              <li><a href="#" className="hover:text-white transition">Mi Movistar</a></li>
+              <li><a href="#" className="hover:text-white transition">Aviso de Privacidad</a></li>
+              <li><a href="#" className="hover:text-white transition">Términos y Condiciones</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Contacto</h4>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-center gap-2"><Phone size={16}/> *611 desde tu Movistar</li>
+              <li className="flex items-center gap-2"><Phone size={16}/> 800 888 8366</li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-gray-800 text-center text-xs">
+          <p>© 2026 Pegaso PCS, S.A. de C.V. Todos los derechos reservados. Movistar es una marca registrada.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
 
-        function goFinish(id) {
-            selectedDev = catalogo.find(e => e.id === id);
-            document.getElementById('final-img').src = selectedDev.img;
-            document.getElementById('final-name').innerText = selectedDev.name;
-            showSection('culminar');
-        }
+// ==========================================
+// COMPONENTE WIZARD DE PORTABILIDAD (Avanzado)
+// ==========================================
+function PortabilidadWizard({ onCancel }) {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    phone: '',
+    wantsDevice: null,
+    planId: null,
+    deviceId: null,
+    name: '',
+    email: ''
+  });
+  const [searchTerm, setSearchTerm] = useState('');
 
-        function finishProcess(e) {
-            e.preventDefault();
-            const name = document.getElementById('client-name').value;
-            const phone = document.getElementById('client-phone').value;
-            const suc = document.getElementById('suc-sel').value;
-            const folio = `MOV-${Math.floor(Math.random()*90000)}`;
-            
-            const msg = `*NUEVA PORTABILIDAD*%0A*FOLIO:* ${folio}%0A*CLIENTE:* ${name}%0A*TÉLEFONO:* ${phone}%0A*EQUIPO:* ${selectedDev.name}%0A*SUCURSAL:* ${suc}`;
-            window.open(`https://api.whatsapp.com/send?phone=04124676073&text=${msg}`, '_blank');
-        }
+  const handleNext = () => setStep(prev => prev + 1);
+  const handleBack = () => setStep(prev => prev - 1);
 
-        // --- BOT LOGIC ---
-        function toggleBot() { document.getElementById('bot-window').classList.toggle('hidden'); }
+  const isPhoneValid = formData.phone.length === 10 && /^\d+$/.test(formData.phone);
+  
+  const submitForm = () => {
+    // Aquí iría la llamada a Vercel Functions / Backend
+    // fetch('/api/portabilidad', { method: 'POST', body: JSON.stringify(formData) })
+    setStep(5); // Pantalla de éxito
+  };
+
+  const filteredDevices = DEVICES.filter(d => 
+    d.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    d.brand.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
         
-        function botQuery(type) {
-            const chat = document.getElementById('chat-content');
-            if(type === 'recarga') {
-                chat.innerHTML += `<div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none self-end ml-10">Consultar última recarga</div>`;
-                setTimeout(() => {
-                    chat.innerHTML += `<div class="bg-blue-100 p-3 rounded-2xl rounded-tl-none font-bold">Tu última recarga fue de $100 el día 01/02/2026. ¡Recuerda que con tu plan tienes redes ilimitadas!</div>`;
-                    chat.scrollTop = chat.scrollHeight;
-                }, 800);
-            } else {
-                chat.innerHTML += `<div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none self-end ml-10">Saber mi estatus</div>`;
-                setTimeout(() => {
-                    chat.innerHTML += `<div class="bg-blue-100 p-3 rounded-2xl rounded-tl-none font-bold">Estatus: ACTIVO. Tu línea goza de cobertura 5G y roaming internacional.</div>`;
-                    chat.scrollTop = chat.scrollHeight;
-                }, 800);
-            }
-        }
+        {/* Header Wizard */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-extrabold text-[#0B2739]">Solicitud de Portabilidad</h1>
+          <button onClick={onCancel} className="text-gray-500 hover:text-red-500 font-medium">Cancelar / Volver</button>
+        </div>
 
-        window.onload = initData;
-    </script>
-</body>
-</html>
+        {/* Progress Bar */}
+        {step < 5 && (
+          <div className="mb-12">
+            <div className="flex justify-between relative">
+              <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -z-10 transform -translate-y-1/2 rounded-full"></div>
+              <div 
+                className="absolute top-1/2 left-0 h-1 bg-[#5BC500] -z-10 transform -translate-y-1/2 rounded-full transition-all duration-500" 
+                style={{ width: `${((step - 1) / 3) * 100}%` }}
+              ></div>
+              
+              {['Tu Número', 'Elige Plan', 'Equipo (Opcional)', 'Confirmación'].map((label, index) => {
+                const isCompleted = step > index + 1;
+                const isCurrent = step === index + 1;
+                return (
+                  <div key={index} className="flex flex-col items-center">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-md transition-colors ${isCompleted ? 'bg-[#5BC500] text-white' : isCurrent ? 'bg-[#019DF4] text-white ring-4 ring-[#019DF4]/30' : 'bg-white text-gray-400 border-2 border-gray-200'}`}>
+                      {isCompleted ? <CheckCircle size={20} /> : index + 1}
+                    </div>
+                    <span className={`mt-2 text-xs font-bold ${isCurrent ? 'text-[#019DF4]' : 'text-gray-500'}`}>{label}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* CONTENIDO DE LOS PASOS */}
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-10 min-h-[400px]">
+          
+          {/* PASO 1: NÚMERO */}
+          {step === 1 && (
+            <div className="animate-fade-in flex flex-col items-center text-center max-w-lg mx-auto">
+              <div className="w-20 h-20 bg-[#019DF4]/10 rounded-full flex items-center justify-center mb-6">
+                <Smartphone size={40} className="text-[#019DF4]" />
+              </div>
+              <h2 className="text-3xl font-extrabold text-[#0B2739] mb-4">Ingresa tu número actual</h2>
+              <p className="text-gray-600 mb-8">No importa de qué compañía vengas, conservar tu número es gratis, rápido y 100% seguro.</p>
+              
+              <div className="w-full relative mb-8">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold text-lg">+52</span>
+                <input 
+                  type="tel" 
+                  maxLength={10}
+                  placeholder="55 1234 5678"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '')})}
+                  className="w-full pl-16 pr-6 py-4 text-2xl font-bold border-2 border-gray-200 rounded-2xl focus:border-[#019DF4] focus:ring-4 focus:ring-[#019DF4]/20 outline-none transition text-center tracking-widest"
+                />
+              </div>
+
+              <button 
+                onClick={handleNext} 
+                disabled={!isPhoneValid}
+                className={`w-full py-4 rounded-xl font-bold text-lg transition shadow-lg ${isPhoneValid ? 'bg-[#5BC500] text-white hover:bg-[#4ba300] hover:-translate-y-1' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+              >
+                Continuar
+              </button>
+              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500">
+                <ShieldCheck size={18} className="text-[#5BC500]"/> Tus datos están protegidos por encriptación bancaria.
+              </div>
+            </div>
+          )}
+
+          {/* PASO 2: SELECCIÓN DE PLAN */}
+          {step === 2 && (
+            <div className="animate-fade-in">
+              <h2 className="text-3xl font-extrabold text-[#0B2739] mb-2">Selecciona tu Plan Pro</h2>
+              <p className="text-gray-600 mb-8">Todos incluyen 50% de descuento por 2 meses en portabilidad.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                {PLANS.map(plan => (
+                  <div 
+                    key={plan.id}
+                    onClick={() => setFormData({...formData, planId: plan.id})}
+                    className={`relative rounded-2xl border-2 cursor-pointer transition-all duration-300 overflow-hidden ${formData.planId === plan.id ? 'border-[#019DF4] shadow-xl ring-4 ring-[#019DF4]/20 scale-105' : 'border-gray-200 hover:border-[#019DF4]/50'}`}
+                  >
+                    {formData.planId === plan.id && (
+                      <div className="absolute top-2 right-2 bg-[#019DF4] text-white rounded-full p-1 z-10">
+                        <CheckCircle size={24} />
+                      </div>
+                    )}
+                    <div className={`${plan.color} py-3 text-center text-white`}>
+                      <h3 className="text-xl font-bold italic">{plan.name}</h3>
+                    </div>
+                    <div className="p-4 text-center bg-white">
+                      <p className="text-3xl font-black text-[#0B2739] mb-1">{plan.gbBase}</p>
+                      <p className="text-sm text-[#019DF4] font-bold mb-4">{plan.gbPromo}</p>
+                      <div className="text-sm font-medium text-gray-600 bg-gray-50 py-2 rounded-lg mb-4 h-10 flex items-center justify-center">
+                        {plan.extra}
+                      </div>
+                      <p className="text-sm text-gray-400 line-through">Normal: ${(plan.price * 2) - 1}</p>
+                      <p className="text-4xl font-black text-[#0B2739]">${plan.price}<span className="text-sm text-gray-500 font-normal">/mes</span></p>
+                      <p className="text-xs text-[#e5007f] font-bold mt-1">x 2 meses</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-10 flex justify-between">
+                <button onClick={handleBack} className="px-6 py-3 font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">Atrás</button>
+                <button 
+                  onClick={handleNext} 
+                  disabled={!formData.planId}
+                  className={`px-10 py-3 rounded-xl font-bold transition shadow-lg ${formData.planId ? 'bg-[#5BC500] text-white hover:bg-[#4ba300]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                >
+                  Confirmar Plan
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* PASO 3: EQUIPO (OPCIONAL) */}
+          {step === 3 && (
+            <div className="animate-fade-in">
+              <h2 className="text-3xl font-extrabold text-[#0B2739] mb-2">¿Quieres estrenar equipo?</h2>
+              <p className="text-gray-600 mb-6">Págalo a meses en tu factura Movistar. (Opcional)</p>
+              
+              <div className="flex gap-4 mb-8">
+                <button 
+                  onClick={() => setFormData({...formData, wantsDevice: false, deviceId: null})}
+                  className={`flex-1 py-4 rounded-xl font-bold border-2 transition ${formData.wantsDevice === false ? 'border-[#019DF4] bg-[#019DF4]/10 text-[#019DF4]' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
+                >
+                  No, solo quiero el SIM
+                </button>
+                <button 
+                  onClick={() => setFormData({...formData, wantsDevice: true})}
+                  className={`flex-1 py-4 rounded-xl font-bold border-2 transition ${formData.wantsDevice === true ? 'border-[#5BC500] bg-[#5BC500]/10 text-[#5BC500]' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
+                >
+                  Sí, quiero ver equipos
+                </button>
+              </div>
+
+              {formData.wantsDevice && (
+                <div className="animate-fade-in bg-gray-50 p-6 rounded-2xl border border-gray-200 mb-8">
+                  <input 
+                    type="text" 
+                    placeholder="Buscar marca o modelo (ej. iPhone, Samsung)..." 
+                    className="w-full p-4 mb-6 border-2 border-gray-200 rounded-xl focus:border-[#019DF4] outline-none"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                    {filteredDevices.map(device => (
+                      <div 
+                        key={device.id} 
+                        onClick={() => setFormData({...formData, deviceId: device.id})}
+                        className={`bg-white p-4 rounded-xl border-2 cursor-pointer transition text-center ${formData.deviceId === device.id ? 'border-[#5BC500] shadow-md ring-2 ring-[#5BC500]/30' : 'border-transparent shadow-sm hover:border-[#019DF4]/50'}`}
+                      >
+                         <img src={device.img} alt={device.name} className="h-24 mx-auto mb-3 object-contain" onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1598327105666-5b89351cb31b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80'} />
+                         <h4 className="font-bold text-gray-800 text-sm h-10">{device.name}</h4>
+                         {formData.deviceId === device.id && <div className="mt-2 text-[#5BC500] font-bold text-xs"><CheckCircle size={16} className="inline mr-1"/>Seleccionado</div>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-8 flex justify-between border-t pt-6 border-gray-100">
+                <button onClick={handleBack} className="px-6 py-3 font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">Atrás</button>
+                <button 
+                  onClick={handleNext} 
+                  disabled={formData.wantsDevice === null || (formData.wantsDevice === true && !formData.deviceId)}
+                  className={`px-10 py-3 rounded-xl font-bold transition shadow-lg ${(formData.wantsDevice === false || formData.deviceId) ? 'bg-[#5BC500] text-white hover:bg-[#4ba300]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                >
+                  Continuar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* PASO 4: CONFIRMACIÓN Y DATOS DE CONTACTO */}
+          {step === 4 && (
+            <div className="animate-fade-in">
+              <h2 className="text-3xl font-extrabold text-[#0B2739] mb-6">Último paso, déjanos tus datos</h2>
+              
+              <div className="bg-blue-50 border border-blue-100 p-6 rounded-2xl mb-8 flex flex-col md:flex-row gap-6">
+                 <div className="flex-1">
+                    <h3 className="text-gray-500 font-bold uppercase text-xs tracking-wider mb-1">Resumen de tu solicitud</h3>
+                    <p className="font-bold text-gray-800"><span className="text-gray-500 font-normal">Número a portar:</span> {formData.phone}</p>
+                    <p className="font-bold text-gray-800"><span className="text-gray-500 font-normal">Plan seleccionado:</span> {PLANS.find(p => p.id === formData.planId)?.name}</p>
+                    {formData.deviceId && (
+                      <p className="font-bold text-[#019DF4]"><span className="text-gray-500 font-normal">Equipo:</span> {DEVICES.find(d => d.id === formData.deviceId)?.name}</p>
+                    )}
+                 </div>
+              </div>
+
+              <div className="space-y-4 max-w-lg">
+                 <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Nombre Completo</label>
+                    <input 
+                      type="text" 
+                      className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#019DF4] outline-none"
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    />
+                 </div>
+                 <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Correo Electrónico (Opcional)</label>
+                    <input 
+                      type="email" 
+                      className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#019DF4] outline-none"
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    />
+                 </div>
+              </div>
+
+              <div className="mt-10 flex justify-between border-t pt-6 border-gray-100">
+                <button onClick={handleBack} className="px-6 py-3 font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">Atrás</button>
+                <button 
+                  onClick={submitForm} 
+                  disabled={formData.name.length < 3}
+                  className={`px-10 py-3 rounded-xl font-bold transition shadow-lg ${formData.name.length >= 3 ? 'bg-[#5BC500] text-white hover:bg-[#4ba300] hover:scale-105' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                >
+                  Finalizar Solicitud
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* PASO 5: ÉXITO */}
+          {step === 5 && (
+            <div className="animate-fade-in flex flex-col items-center text-center py-12">
+              <div className="w-24 h-24 bg-[#5BC500]/20 rounded-full flex items-center justify-center mb-6">
+                <CheckCircle size={60} className="text-[#5BC500]" />
+              </div>
+              <h2 className="text-4xl font-extrabold text-[#0B2739] mb-4">¡Solicitud Recibida!</h2>
+              <p className="text-xl text-gray-600 mb-8 max-w-md">
+                Hola <b>{formData.name.split(' ')[0]}</b>, un asesor especializado de Movistar se comunicará contigo al <b>{formData.phone}</b> en los próximos 15 minutos para validar tu trámite y enviarte tu nuevo SIM{formData.deviceId ? ' y equipo' : ''}.
+              </p>
+              <button 
+                onClick={onCancel}
+                className="bg-[#019DF4] text-white px-8 py-4 rounded-full font-bold shadow-lg hover:bg-[#007bb5] transition"
+              >
+                Volver al inicio
+              </button>
+            </div>
+          )}
+          
+        </div>
+      </div>
+      
+      {/* Estilos inline para cosas muy específicas como scrollbars invisibles */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      `}} />
+    </div>
+  );
+}
